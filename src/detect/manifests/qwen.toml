@@ -1,0 +1,46 @@
+id = "qwen"
+version = "2026.07.08.1"
+min_engine_version = 2
+updated_at = "2026-07-08T00:00:00Z"
+aliases = ["qwen-code"]
+
+# Evidence: Qwen Code live pane reads from herdr session (w9:p1).
+#
+# Working turns show a braille spinner line above the input prompt:
+#   "⠧ Updating the syntax for reality... (3m · ↓ 3.3k tokens · esc to cancel)"
+# with a task box above containing "◐" for in-progress tasks.
+# The status bar always shows: "➜ <project> · git:(<branch>) · <model> · ..."
+# and the mode line shows "auto mode (classifier-evaluated)".
+# Idle shows the input prompt ">   Type your message or @path/to/file"
+# without any spinner or "esc to cancel" hint.
+
+[[rules]]
+id = "esc_cancel_working"
+state = "working"
+priority = 200
+region = "whole_recent"
+visible_working = true
+contains = ["esc to cancel"]
+
+[[rules]]
+id = "task_box_in_progress_working"
+state = "working"
+priority = 190
+region = "whole_recent"
+visible_working = true
+contains = ["◐"]
+all = [
+  { contains = ["Current tasks"] },
+]
+
+[[rules]]
+id = "idle_input_prompt"
+state = "idle"
+priority = 100
+region = "whole_recent"
+visible_idle = true
+contains = ["Type your message or @path/to/file"]
+not = [
+  { contains = ["esc to cancel"] },
+  { contains = ["◐"] },
+]
